@@ -15,6 +15,7 @@
     - binutils
     - libproj-dev
     - gdal-bin
+    - libjpeg-dev
 
 - name: Clone Django Repository
   git: repo=https://github.com/ndraper2/django-imager.git dest={{ home }} force=yes
@@ -45,8 +46,6 @@
     settings: imagersite.production
     command: migrate
 
-- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set domain = '{{ ec2_public_dns_name }}' WHERE id = 1;"
-- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set name = 'django imager' WHERE id = 1;"
 
 - name: Collect Static Files
   environment:
@@ -55,3 +54,27 @@
     app_path: "{{ django_home }}"
     settings: imagersite.production
     command: collectstatic
+
+
+- name: Add Admin group
+  sudo: yes
+  group: name=django_admin state=present
+
+- name: Add new User to Run Django
+  sudo: yes
+  user: name=django uid=1040 group=django_admin
+
+- name: Add Ubuntu to django admin group
+  sudo: yes
+  user: name=ubuntu groups=django_admin append=yes
+
+
+- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set domain = '{{ ec2_public_dns_name }}' WHERE id = 1;"
+- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set name = 'django imager' WHERE id = 1;"
+- name: Change group permissions on home folder
+  sudo: yes
+  shell: chgrp -R django_admin {{ home }} && chmod -R 775 {{ home }}
+
+- name: Change group permissions on static folder
+  sudo: yes
+  shell: chgrp -R django_admin {{ static_home }} && chmod -R 775 {{ static_home }}
