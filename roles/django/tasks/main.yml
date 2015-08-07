@@ -12,15 +12,18 @@
     - python-pip
     - python-psycopg2
     - git
+    - binutils
+    - libproj-dev
+    - gdal-bin
 
 - name: Clone Django Repository
-  git: repo=https://github.com/ndraper2/django-imager.git dest={{ django_home }} force=yes
+  git: repo=https://github.com/ndraper2/django-imager.git dest={{ home }} force=yes
 
 - name: Install Python Dependencies
   sudo: yes
   pip:
     state: present
-    requirements: "{{ django_home }}/requirements.txt"
+    requirements: "{{ home }}/requirements.txt"
 
 - name: Get DB Hostvars
   set_fact:
@@ -32,7 +35,7 @@
 
 - name: Set DB URL
   set_fact:
-    db_url: "{{ db_host.ec2_engine }}://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }}"
+    db_url: "postgis://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }}"
 
 - name: Run Migrations
   environment:

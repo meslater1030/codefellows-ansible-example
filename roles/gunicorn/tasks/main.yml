@@ -6,8 +6,11 @@
 
 - name: Create gunicorn Upstart Job
   sudo: yes
-  template: src=djangoblog.conf.j2 dest=/etc/init/imagersite.conf
+  template: src=imagersite.conf.j2 dest=/etc/init/imagersite.conf
 
 - name: Start gunicorn Upstart Job
   sudo: yes
   service: name=imagersite state=restarted
+
+- name: Get passwords
+  include_vars: secrets.yml

@@ -10,7 +10,7 @@ chdir {{ django_home }}
 env DJANGO_SETTINGS_MODULE=imagersite.production
 env DATABASE_URL={{ db_url }}
 env SECRET_KEY={{ secret_key }}
-env ALGORITHMIA_KEY={{ algorithmia_key }}
+env ALGORITHMIA_KEY='{{ algorithmia_key }}'
 env EMAIL_HOST_USER={{ secret_email }}
 env EMAIL_HOST_PASSWORD={{ email_host_password }}
 env DEFAULT_FROM_EMAIL={{ secret_email }}
