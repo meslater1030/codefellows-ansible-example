@@ -45,6 +45,9 @@
     settings: imagersite.production
     command: migrate
 
+- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set domain = '{{ ec2_public_dns_name }}' WHERE id = 1;"
+- shell: psql postgres://{{ db_host.ec2_master_username }}:{{ db_password }}@{{ db_host.ec2__address }}:{{ db_host.ec2__port }}/{{ db_host.ec2_DBName }} -c "UPDATE django_site set name = 'django imager' WHERE id = 1;"
+
 - name: Collect Static Files
   environment:
     DATABASE_URL: "{{ db_url }}"
