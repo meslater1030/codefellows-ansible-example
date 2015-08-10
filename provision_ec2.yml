@@ -1,8 +1,6 @@
 ---
 
-- name: Deploy Django Site
+- name: Deploy Pyramid Site
   hosts: local
-  vars:
-    rds_database_instance: codefellows
   roles:
     - ec2_provisioning
