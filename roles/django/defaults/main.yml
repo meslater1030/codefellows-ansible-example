@@ -1,4 +1,0 @@
-django_home: /home/ubuntu/django-imager/imagersite
-rds_db_instance: codefellows
-home: /home/ubuntu/django-imager
-static_home: /home/ubuntu/django-imager/imagersite/static
